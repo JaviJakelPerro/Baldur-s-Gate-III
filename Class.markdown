@@ -6,3 +6,5 @@ As extra:
 - Related Missions
 - New enemies
 - New maps
+# Cazador
+Algo tipo cazador de bloodborne? con su mecanica de ganar vida despues de que le peguen?

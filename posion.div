@@ -1,0 +1,30 @@
+.// Evento: Aplicar Poison
+// Aplica el estado de veneno a un objetivo
+PROC ApplyPoisonToTarget((CHARACTER) Target)
+    IF "c1"
+        NOT DB_IsCharacterPoisoned(Target) // Verifica que el objetivo no esté ya envenenado
+    THEN
+        DB_IsCharacterPoisoned(Target); // Marca al objetivo como envenenado
+        ApplyStatus(Target, "POISON", 6.0, 1); // Aplica el estado de Poison por 6 segundos (1 turno aprox.)
+    ENDIF
+ENDPROC
+
+// Evento: Daño periódico del Poison
+EVENT CharacterStatusTurnStart((CHARACTER) Target, STRING StatusID)
+    IF "c1"
+        StatusID == "POISON"
+    THEN
+        // Inflige daño al portador del estado "POISON"
+        DealDamage(Target, Target, 10, "Poison"); // Inflige 10 puntos de daño tipo "Poison"
+    ENDIF
+ENDEVENT
+
+// Evento: Eliminar el estado de Poison
+EVENT CharacterStatusRemoved((CHARACTER) Target, STRING StatusID)
+    IF "c1"
+        StatusID == "POISON"
+    THEN
+        RemoveStatus(Target, "POISON"); // Elimina el estado Poison
+        DB_IsCharacterPoisoned(Target, 0); // Limpia la marca de envenenado
+    ENDIF
+ENDEVENT

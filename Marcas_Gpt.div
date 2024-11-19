@@ -1,0 +1,33 @@
+// Evento: Aplicar marca
+PROC ApplyMarkToTarget((CHARACTER) Target, (CHARACTER) Source)
+    IF "c1"
+        NOT DB_IsCharacterMarked(Target)
+    THEN
+        DB_IsCharacterMarked(Target, Source);
+        ApplyStatus(Target, "SPELLWEAVER_MARK", 6.0, 1);
+        PlayEffect(Target, "FX_UI_MarkedGlow"); // Efecto visual al aplicar la marca
+    ENDIF
+ENDPROC
+// Evento: Detonar marca
+EVENT CharacterTookDamage((CHARACTER) Target, (CHARACTER) Attacker, INT Damage, STRING DamageType)
+    IF "c1"
+        DB_IsCharacterMarked(Target, _Source)
+        Target != Attacker
+        DB_IsMarkingAttack(Attacker)
+    THEN
+        DealDamage(Target, Target, 1d4, "Magic");
+        RemoveStatus(Target, "SPELLWEAVER_MARK");
+        StopEffect(Target, "FX_UI_MarkedGlow"); // Detener efecto visual al eliminar la marca
+        NOT DB_IsCharacterMarked(Target, _Source); // Limpieza directa
+    ENDIF
+ENDEVENT
+// Evento: Control del ataque que marca
+EVENT MarkingAttack((CHARACTER) Attacker, STRING AttackID)
+    IF "c1"
+        AttackID == "SPELLWEAVER_ATTACK"
+    THEN
+        DB_IsMarkingAttack(Attacker); // Marca al ataque como válido
+    ELSE
+        NOT DB_IsMarkingAttack(Attacker); // Limpieza automática
+    ENDIF
+ENDEVENT

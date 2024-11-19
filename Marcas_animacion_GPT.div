@@ -1,0 +1,17 @@
+// Escuchar cuando un personaje recibe la marca
+EVENT CharacterStatusApplied((CHARACTER) Target, STRING StatusID)
+    IF "c1"
+        StatusID == "SPELLWEAVER_MARK"
+    THEN
+        PlayEffect(Target, "FX_UI_MarkedGlow"); // Añade brillo visual
+    ENDIF
+ENDEVENT
+
+// Escuchar cuando la marca es eliminada
+EVENT CharacterStatusRemoved((CHARACTER) Target, STRING StatusID)
+    IF "c1"
+        StatusID == "SPELLWEAVER_MARK"
+    THEN
+        StopEffect(Target, "FX_UI_MarkedGlow"); // Detiene el brillo visual
+    ENDIF
+ENDEVENTel
